@@ -10,9 +10,6 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include <stack>
-
-
 
 class Game : public Application
 {
@@ -112,8 +109,7 @@ public:
 
 		camera->targetPosition.y = newy;
 		vy = newvy;
-
-		camera->roll();
+		
 		camera->update();
 	}
 
@@ -175,6 +171,11 @@ public:
 			camera->ProcessKeyboard(LEFT, dt);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			camera->ProcessKeyboard(RIGHT, dt);
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+			ay = -50.0f;//camera->ProcessKeyboard(UP, dt);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+			ay = 40.0f;//camera->ProcessKeyboard(DOWN, dt);
 	}
 
 private:

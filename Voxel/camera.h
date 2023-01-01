@@ -13,7 +13,9 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT, 
+    UP, 
+    DOWN
 };
 
 
@@ -40,19 +42,25 @@ public:
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
     {
         glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
-        float speed = 100.0f;
+        float speed = 50.0f;
 
         if (direction == FORWARD) {
             targetPosition -= glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
         }
         else if (direction == BACKWARD) {
-            targetPosition += front * deltaTime * speed;
+            targetPosition += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
         } 
         else if (direction == LEFT) {
             targetPosition -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * deltaTime * speed;
         }
         else if (direction == RIGHT) {
             targetPosition += glm::normalize(glm::vec3(front.z, 0, -front.x)) * deltaTime * speed;
+        }
+        else if (direction == UP) {
+            targetPosition.y -= deltaTime * speed;
+        }
+        else if (direction == DOWN) {
+            targetPosition.y += deltaTime * speed;
         }
     }
 

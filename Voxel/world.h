@@ -58,7 +58,7 @@ private:
 
 	void addBlockMesh(float x, float y, float z) {
 		std::vector<float> blockVertices{
-			-0.5f + x, -0.5f + y, -0.5f + z,  0.0f,  0.0f, -1.0f,
+			/*-0.5f + x, -0.5f + y, -0.5f + z,  0.0f,  0.0f, -1.0f,
 			 0.5f + x, -0.5f + y, -0.5f + z,  0.0f,  0.0f, -1.0f,
 			 0.5f + x,  0.5f + y, -0.5f + z,  0.0f,  0.0f, -1.0f,
 			 0.5f + x,  0.5f + y, -0.5f + z,  0.0f,  0.0f, -1.0f,
@@ -86,12 +86,12 @@ private:
 			 0.5f + x, -0.5f + y,  0.5f + z,  1.0f,  0.0f,  0.0f,
 			 0.5f + x,  0.5f + y,  0.5f + z,  1.0f,  0.0f,  0.0f,
 											 
-			-0.5f + x, -0.5f + y, -0.5f + z,  0.0f, -1.0f,  0.0f,
+		-0.5f + x, -0.5f + y, -0.5f + z,  0.0f, -1.0f,  0.0f,
 			 0.5f + x, -0.5f + y, -0.5f + z,  0.0f, -1.0f,  0.0f,
 			 0.5f + x, -0.5f + y,  0.5f + z,  0.0f, -1.0f,  0.0f,
 			 0.5f + x, -0.5f + y,  0.5f + z,  0.0f, -1.0f,  0.0f,
 			-0.5f + x, -0.5f + y,  0.5f + z,  0.0f, -1.0f,  0.0f,
-			-0.5f + x, -0.5f + y, -0.5f + z,  0.0f, -1.0f,  0.0f,
+			-0.5f + x, -0.5f + y, -0.5f + z,  0.0f, -1.0f,  0.0f,*/
 											 
 			-0.5f + x,  0.5f + y, -0.5f + z,  0.0f,  1.0f,  0.0f,
 			 0.5f + x,  0.5f + y, -0.5f + z,  0.0f,  1.0f,  0.0f,
@@ -100,7 +100,6 @@ private:
 			-0.5f + x,  0.5f + y,  0.5f + z,  0.0f,  1.0f,  0.0f,
 			-0.5f + x,  0.5f + y, -0.5f + z,  0.0f,  1.0f,  0.0f
 		};
-
 		vertices.insert(vertices.end(), blockVertices.begin(), blockVertices.end());
 	}
 
@@ -117,10 +116,10 @@ public:
 		this->globalX = globalX;
 		this->globalZ = globalZ;
 
-		//GENERATE THE TERRAIN AND STORE IN BLOCKS vector
+		//generate the terrain and store in blocks vector
 
 		//init the grid with 0s
-		blocks.resize(size, std::vector<std::vector<int>>(100, std::vector<int>(size, 0)));
+		blocks.resize(size, std::vector<std::vector<int>>(200, std::vector<int>(size, 0)));
 
 		//get elevations
 		elevations.resize(size, std::vector<int>(size, 0));
@@ -138,7 +137,7 @@ public:
 
 	//returns whether block is there or not
 	bool IsActive(int x, int y, int z) {
-		if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 100)
+		if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 200)
 			return blocks[x][y][z];
 
 		return false;
@@ -149,7 +148,7 @@ public:
 	}
 
 	void PlaceBlock(int x, int y, int z) {
-		if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 100) {
+		if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 200) {
 			blocks[x][y][z] = 1;
 
 			delete mesh;
@@ -165,7 +164,7 @@ public:
 			float y = position.y;
 			float z = position.z;
 
-			if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 100) {
+			if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 200) {
 				blocks[x][y][z] = 1;
 			}
 		}
@@ -174,8 +173,6 @@ public:
 	}
 
 	void DestroyBlock(int x, int y, int z) {
-		//if a block is there, destroy it
-		//then rebuild the mesh and send to GPU
 		if (x >= 0 && x < size && z >= 0 && z < size && y >= 0 && y < 40) {
 			blocks[x][y][z] = 0;
 			//rebuild mesh
@@ -185,20 +182,19 @@ public:
 	}
 
 	void Update(double dt) {
-		//in the future, there will be ongoing processes that will require updates
+		
 	}
 
 	~Chunk() {
 		delete mesh;
 	}
 
-
 	std::vector<std::vector<int>> elevations;
 private:
 	std::vector<std::vector<std::vector<int>>> blocks;
 	BlockMesh* mesh;
 	int globalX, globalZ;
-	int size = 200;
+	int size = 500;
 };
 
 

@@ -45,7 +45,7 @@ Application::Application()
 	});
 	
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGL(glfwGetProcAddress))
@@ -75,7 +75,7 @@ void Application::Run()
 	Init();
 
 	float lastTime = glfwGetTime();
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	
 	glClearColor(0.62, 0.871, 0.969, 1.0f);
 
