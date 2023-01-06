@@ -26,12 +26,11 @@ Application::Application()
 
 	glfwSetWindowUserPointer(this->window, this);
 
-	/*
 	glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->OnKeyEvent(key, action);
-	});*/
+		dataPtr->KeyCallback(key, action);
+	});
 
 	glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos)
 	{
@@ -71,11 +70,15 @@ Application::Application()
 	glFrontFace(GL_CW);
 }
 
+void Application::KeyCallback(int key, int action)
+{
+	this->ProcessKeyEvent(key, action, this->deltaTime);
+}
+
 void Application::OnCursorPosEvent(double xpos, double ypos)
 {
 	this->ProcessMouseInput(xpos, ypos);
 }
-
 
 void Application::mouse_button_callback(int button, int action) 
 {
@@ -91,15 +94,15 @@ void Application::Run()
 {
 	Init();
 
-	float lastTime = glfwGetTime();
+	double lastTime = glfwGetTime();
 	glfwSwapInterval(1);
 	
 	glClearColor(0.62, 0.871, 0.969, 1.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{	
-		float currentTime = glfwGetTime();
-		float deltaTime = currentTime - lastTime;
+		double currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
 		//std::cout << 1.0f / deltaTime << std::endl;
