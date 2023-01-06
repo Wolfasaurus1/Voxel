@@ -149,7 +149,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.h" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="world.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.fs" />
@@ -159,10 +159,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BlockMesh.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Chunk.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="world.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

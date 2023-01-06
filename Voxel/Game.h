@@ -1,15 +1,15 @@
 #pragma once
-#include "Application.h"
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "shader.h"
-#include "PerlinNoise.hpp"
-#include "world.h"
-#include "camera.h"
+#include <PerlinNoise.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "Application.h"
+#include "shader.h"
+#include "Chunk.h"
+#include "camera.h"
 #include "GUI.h"
 
 
@@ -195,7 +195,7 @@ public:
 
 	void ProcessScroll(double xoffset, double yoffset)
 	{
-		gui->HandleMouseScroll(yoffset);
+		gui->HandleMouseScroll(-yoffset);
 	}
 
 private:

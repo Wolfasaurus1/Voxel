@@ -2,18 +2,6 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-struct KeyboardEvent 
-{
-	int key;
-	int action;
-};
-
-
-struct CursorMovementEvent 
-{
-	double xpos, ypos;
-};
-
 
 class Application
 {
