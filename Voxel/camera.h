@@ -28,7 +28,7 @@ public:
 
     Camera()
     {
-        position = glm::vec3(-20.0f, -40.0f, -20.0f);
+        position = glm::vec3(20.0f, 40.0f, 20.0f);
         targetPosition = position;
         orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         targetOrientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
@@ -36,7 +36,7 @@ public:
 
     glm::mat4 GetViewMatrix()
     {
-        return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), position);
+        return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -position);
     }
 
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -45,22 +45,22 @@ public:
         float speed = 50.0f;
 
         if (direction == FORWARD) {
-            targetPosition -= glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
+            targetPosition += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
         }
         else if (direction == BACKWARD) {
-            targetPosition += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
+            targetPosition -= glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * deltaTime * speed;
         } 
         else if (direction == LEFT) {
-            targetPosition -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * deltaTime * speed;
-        }
-        else if (direction == RIGHT) {
             targetPosition += glm::normalize(glm::vec3(front.z, 0, -front.x)) * deltaTime * speed;
         }
+        else if (direction == RIGHT) {
+            targetPosition -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * deltaTime * speed;
+        }
         else if (direction == UP) {
-            targetPosition.y -= deltaTime * speed;
+            targetPosition.y += deltaTime * speed;
         }
         else if (direction == DOWN) {
-            targetPosition.y += deltaTime * speed;
+            targetPosition.y -= deltaTime * speed;
         }
     }
 

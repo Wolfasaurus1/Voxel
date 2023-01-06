@@ -10,6 +10,9 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "GUI.h"
+
+
 
 class Game : public Application
 {
@@ -17,12 +20,19 @@ public:
 	void Init() 
 	{
 		myShader = new Shader("vertex.vs", "fragment.fs");
-		chunk = new Chunk(0, 0, perlin);
 		camera = new Camera;
+
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
+				chunks.push_back(new Chunk(i * 256, j * 256, perlin));
+			}
+		}
+
+		gui = new GUI();
 
 		myShader->use();
 		//projection matrix
-		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 2000.0f);
 		myShader->setMat4("projection", projection);
 	}
 
@@ -55,7 +65,7 @@ public:
 		else {
 			return glm::vec3(0.0f);
 		}
-	}*/
+	}
 
 
 	void rayTrace() {
@@ -94,11 +104,12 @@ public:
 		}
 		positions.pop_back();
 		chunk->PlaceBlocks(positions);
-	}
+	}*/
 
 
 	void Update(float dt) 
 	{
+		/*
 		float newvy = vy + ay * dt;
 		float newy = camera->targetPosition.y + (vy * dt) + (ay * dt * dt / 2.0f);
 
@@ -109,22 +120,27 @@ public:
 
 		camera->targetPosition.y = newy;
 		vy = newvy;
-		
+		*/
 		camera->update();
 	}
 
 	void Render() 
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glClearColor(0.0, 0.0, 0.0, 1.0f);
+
+		myShader->use();
 
 		//view matrix
 		glm::mat4 view = camera->GetViewMatrix();
 		myShader->setMat4("view", view);
 
-		chunk->Render(*myShader);
+		for (auto chunk : chunks)
+			chunk->Render(*myShader);
+
+		gui->Render();
 	}
 
+	//
 	void ProcessMouseInput(double xposIn, double yposIn) 
 	{
 		float xpos = static_cast<float>(xposIn);
@@ -150,9 +166,8 @@ public:
 		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && !blockPlaced)
 		{
 			blockPlaced = true;
-			rayTrace();
+			//rayTrace();
 		}
-
 
 		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 			blockPlaced = false;
@@ -173,9 +188,14 @@ public:
 			camera->ProcessKeyboard(RIGHT, dt);
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-			ay = -50.0f;//camera->ProcessKeyboard(UP, dt);
+			camera->ProcessKeyboard(UP, dt);
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			ay = 40.0f;//camera->ProcessKeyboard(DOWN, dt);
+			camera->ProcessKeyboard(DOWN, dt);
+	}
+
+	void ProcessScroll(double xoffset, double yoffset)
+	{
+		gui->HandleMouseScroll(yoffset);
 	}
 
 private:
@@ -183,11 +203,12 @@ private:
 	float ay = 40.f;
 	bool blockPlaced = false;
 	Shader* myShader;
-	Chunk* chunk;
+	std::vector<Chunk*> chunks;
 	const siv::PerlinNoise::seed_type seed = 55u;
 	const siv::PerlinNoise perlin{ seed };
 	Camera* camera;
 	bool firstMouse = true;
 	float lastX = SCR_WIDTH / 2.0f;
 	float lastY = SCR_HEIGHT / 2.0f;
+	GUI* gui;
 };

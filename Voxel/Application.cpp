@@ -3,6 +3,7 @@
 #include <iostream>
 #include <functional>
 #include <Windows.h>
+#include <chrono>
 
 Application::Application() 
 {
@@ -21,7 +22,7 @@ Application::Application()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	window = glfwCreateWindow(mode->width, mode->height, "Voxel Engine", primary, NULL);
+	window = glfwCreateWindow(3840, 2160, "Voxel Engine", primary, NULL);
 
 	glfwSetWindowUserPointer(this->window, this);
 
@@ -43,9 +44,15 @@ Application::Application()
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
 		dataPtr->mouse_button_callback(button, action);
 	});
+
+	glfwSetScrollCallback(this->window, [](GLFWwindow* window, double xoffset, double yoffset)
+	{
+		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
+		dataPtr->ScrollCallBack(xoffset, yoffset);
+	});
 	
 	glfwMakeContextCurrent(window);
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGL(glfwGetProcAddress))
@@ -53,10 +60,16 @@ Application::Application()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 	}
 
+	//int width, height;
+	//glfwGetFramebufferSize(window, &width, &height);
+	//glViewport(0, 0, width, height);
+
 	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
 }
-
-
 
 void Application::OnCursorPosEvent(double xpos, double ypos)
 {
@@ -69,13 +82,17 @@ void Application::mouse_button_callback(int button, int action)
 	this->ProcessMouseButton(button, action);
 }
 
+void Application::ScrollCallBack(double xoffset, double yoffset) 
+{
+	this->ProcessScroll(xoffset, yoffset);
+}
 
 void Application::Run() 
 {
 	Init();
 
 	float lastTime = glfwGetTime();
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	
 	glClearColor(0.62, 0.871, 0.969, 1.0f);
 
@@ -85,10 +102,13 @@ void Application::Run()
 		float deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
+		//std::cout << 1.0f / deltaTime << std::endl;
+
 		glfwPollEvents();
 		ProcessInput(deltaTime);
 		Update(deltaTime);
 		Render();
 		glfwSwapBuffers(window);
+		glFinish();
 	}
 }
