@@ -27,8 +27,6 @@ public:
 
 		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)3840.0f / (float)2160.0f, 0.1f, 2000.0f);
 		worldShader->setMat4("projection", projection);
-
-		camera = new Camera;
 	}
 
 	glm::vec2 GetChunkIndices(int x, int z) 
@@ -55,44 +53,7 @@ public:
 		//chunks[chunkIndices[0]][chunkIndices[1]]->PlaceBlock()
 	}
 
-	void ProcessKeyEvent(int key, int action, double dt) 
-	{
-		if (key == GLFW_KEY_W && action == GLFW_PRESS)
-			camera->ProcessKeyboard(FORWARD, dt);
-		if (key == GLFW_KEY_S && action == GLFW_PRESS)
-			camera->ProcessKeyboard(BACKWARD, dt);
-		if (key == GLFW_KEY_A && action == GLFW_PRESS)
-			camera->ProcessKeyboard(LEFT, dt);
-		if (key == GLFW_KEY_D && action == GLFW_PRESS)
-			camera->ProcessKeyboard(RIGHT, dt);
-
-		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-			camera->ProcessKeyboard(UP, dt);
-		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
-			camera->ProcessKeyboard(DOWN, dt);
-	}
-
-	void ProcessMouseMovement(double xposIn, double yposIn)
-	{
-		float xpos = static_cast<float>(xposIn);
-		float ypos = static_cast<float>(yposIn);
-		if (firstMouse)
-		{
-			lastX = xpos;
-			lastY = ypos;
-			firstMouse = false;
-		}
-
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-		lastX = xpos;
-		lastY = ypos;
-
-		camera->ProcessMouseMovement(xoffset, yoffset);
-	}
-
-	void Render() 
+	void Render(Camera* camera) 
 	{
 		worldShader->use();
 
@@ -107,19 +68,12 @@ public:
 		}
 	}
 
-	void Update(double dt) 
-	{
-		camera->update();
-	}
+	void Update(double dt) {}
 
 private:
-	Camera* camera;
 	Shader* worldShader;
 	std::vector <std::vector<Chunk*>> chunks;
 	int chunkSize = 30;
 	const siv::PerlinNoise::seed_type seed = 1233445u;
 	const siv::PerlinNoise perlin{ seed };
-	bool firstMouse = true;
-	float lastX = 3840.0f / 2.0f;
-	float lastY = 2160.0f / 2.0f;
 };

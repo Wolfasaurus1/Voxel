@@ -2,15 +2,10 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include <PerlinNoise.hpp>
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/gtc/quaternion.hpp>
-
 #include "Application.h"
-#include "shader.h"
 #include "World.h"
-#include "camera.h"
 #include "GUI.h"
+#include "Player.h"
 
 
 
@@ -21,6 +16,7 @@ public:
 	{
 		world = new World();
 		gui = new GUI();
+		player = new Player();
 	}
 
 	/*
@@ -96,6 +92,7 @@ public:
 
 	void Update(float dt) 
 	{
+		player->Update(dt);
 		world->Update(dt);
 	}
 
@@ -103,29 +100,23 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		world->Render();
+		world->Render(player->camera);
 		gui->Render();
 	}
 
 	void ProcessMouseInput(double xposIn, double yposIn) 
 	{
-		world->ProcessMouseMovement(xposIn, yposIn);
+		player->ProcessMouseMovement(xposIn, yposIn);
 	}
 
-	void ProcessMouseButton(int button, int action) 
-	{
-
-	}
+	void ProcessMouseButton(int button, int action) {}
 
 	void ProcessKeyEvent(int key, int action, double dt)
-	{
-		world->ProcessKeyEvent(key, action, dt);
-	}
-
-	void ProcessInput(float dt) 
-	{
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{		
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
+
+		player->ProcessKeyEvent(key, action, dt);
 	}
 
 	void ProcessScroll(double xoffset, double yoffset)
@@ -136,4 +127,5 @@ public:
 private:
 	GUI* gui;
 	World* world;
+	Player* player;
 };

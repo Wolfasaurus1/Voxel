@@ -76,5 +76,8 @@
     <ClInclude Include="Chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

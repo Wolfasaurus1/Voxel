@@ -108,7 +108,6 @@ void Application::Run()
 		//std::cout << 1.0f / deltaTime << std::endl;
 
 		glfwPollEvents();
-		ProcessInput(deltaTime);
 		Update(deltaTime);
 		Render();
 		glfwSwapBuffers(window);
