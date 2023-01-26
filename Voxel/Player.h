@@ -1,37 +1,58 @@
 #pragma once
+#include <unordered_map>
+#include <glm/gtc/quaternion.hpp>
+#include "World.h"
 
-
-#include "camera.h"
 
 class Player
 {
 public:
 	Player() {
-		camera = new Camera;
+		position = glm::vec3(20.0f, 40.0f, 20.0f);
+		orientation = glm::quat(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
-	void Update(double dt)
+	void Update(float dt)
 	{
-		camera->update();
+		glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
+		float speed = 200.0f;
+
+		if (keysPressed[GLFW_KEY_W])
+			position += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
+		if (keysPressed[GLFW_KEY_S])
+			position -= glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
+		if (keysPressed[GLFW_KEY_A])
+			position += glm::normalize(glm::vec3(front.z, 0, -front.x)) * dt * speed;
+		if (keysPressed[GLFW_KEY_D])
+			position -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * dt * speed;
+
+
+		if (keysPressed[GLFW_KEY_SPACE])
+			position.y += dt * speed;
+		if (keysPressed[GLFW_KEY_LEFT_SHIFT])
+			position.y -= dt * speed;
 	}
 
+	void MoveForward(double dt)
+	{
+
+	}
+
+	void Move(glm::vec3 dir, float dt)
+	{
+		this->position += dir;
+	}
+
+	// key presses result in changes in position! 
 	void ProcessKeyEvent(int key, int action, double dt)
 	{
-		if (key == GLFW_KEY_W && action == GLFW_PRESS)
-			camera->ProcessKeyboard(FORWARD, dt);
-		if (key == GLFW_KEY_S && action == GLFW_PRESS)
-			camera->ProcessKeyboard(BACKWARD, dt);
-		if (key == GLFW_KEY_A && action == GLFW_PRESS)
-			camera->ProcessKeyboard(LEFT, dt);
-		if (key == GLFW_KEY_D && action == GLFW_PRESS)
-			camera->ProcessKeyboard(RIGHT, dt);
-
-		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-			camera->ProcessKeyboard(UP, dt);
-		if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
-			camera->ProcessKeyboard(DOWN, dt);
+		if (action == GLFW_PRESS)
+			keysPressed[key] = true;
+		if (action == GLFW_RELEASE)
+			keysPressed[key] = false;
 	}
 
+	// mouse movement changes the orientation of the player
 	void ProcessMouseMovement(double xposIn, double yposIn)
 	{
 		float xpos = static_cast<float>(xposIn);
@@ -49,15 +70,27 @@ public:
 		lastX = xpos;
 		lastY = ypos;
 
-		camera->ProcessMouseMovement(xoffset, yoffset);
+		float pitch = -yoffset * 0.12f;
+		float yaw = xoffset * 0.12f;
+
+		glm::quat pitchQuat = glm::angleAxis(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::quat yawQuat = glm::angleAxis(glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		orientation = glm::normalize(pitchQuat) * orientation * glm::normalize(yawQuat);
 	}
 
+	glm::mat4 GetViewMatrix()
+	{
+		return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -position);
+	}
 
-	Camera* camera;
-
+	glm::vec3 position;
 private:
-	// for keeping track of mouse movements
+	std::unordered_map<int, bool> keysPressed;
+
 	bool firstMouse = true;
 	float lastX = 3840.0f / 2.0f;
 	float lastY = 2160.0f / 2.0f;
+
+	glm::quat orientation;
 };

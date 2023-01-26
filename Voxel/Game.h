@@ -100,7 +100,7 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		world->Render(player->camera);
+		world->Render(*player);
 		gui->Render();
 	}
 
@@ -122,6 +122,13 @@ public:
 	void ProcessScroll(double xoffset, double yoffset)
 	{
 		gui->HandleMouseScroll(-yoffset);
+	}
+
+	~Game()
+	{
+		delete world;
+		delete gui;
+		delete player;
 	}
 
 private:

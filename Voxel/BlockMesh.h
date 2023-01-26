@@ -1,5 +1,8 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/hash.hpp"
 
+#include <unordered_map>
 #include <vector>
 #include <glad/gl.h>
 #include <glm/common.hpp>
@@ -60,15 +63,23 @@ struct BlockData {
 };
 
 
+
 class BlockMesh {
 public:
 
-	BlockMesh(std::vector<std::vector<std::vector<int>>>& blocks) {
+	BlockMesh(std::unordered_map<glm::ivec3, bool>& stuff) {
+		blocks.resize(256 * 256);
+
 		//build the mesh
-		for (int x = 0; x < blocks.size(); x++) {
-			for (int y = 0; y < blocks[x].size(); y++) {
-				for (int z = 0; z < blocks[x][y].size(); z++) {
-					if (blocks[x][y][z]) {
+		glm::ivec3 pos;
+		for (int x = 0; x < 256; x++) {
+			for (int y = 0; y < 50; y++) {
+				for (int z = 0; z < 256; z++) {
+					pos.x = x;
+					pos.y = y;
+					pos.z = z;
+
+					if (stuff.count(pos)) {
 						addBlockMesh(x, y, z);
 					}
 				}

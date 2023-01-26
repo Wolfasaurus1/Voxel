@@ -17,7 +17,7 @@ void main()
     if (diff > 0.9f) {
         FragColor = vec4(realColor, 1.0);
     } else {
-        FragColor = vec4(realColor / 2.0f, 1.0);
+        FragColor = vec4(realColor  * 0.6, 1.0);
     }
 
     
