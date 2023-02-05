@@ -22,6 +22,8 @@ Application::Application()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
+	glfwWindowHint(GLFW_SAMPLES, 4);
+
 	window = glfwCreateWindow(3840, 2160, "Voxel Engine", primary, NULL);
 
 	glfwSetWindowUserPointer(this->window, this);
@@ -29,25 +31,25 @@ Application::Application()
 	glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->KeyCallback(key, action);
+		dataPtr->ProcessKeyEvent(key, action, dataPtr->deltaTime);
 	});
 
 	glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos)
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->OnCursorPosEvent(xpos, ypos);
+		dataPtr->ProcessMouseInput(xpos, ypos);
 	});
 
 	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) 
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->mouse_button_callback(button, action);
+		dataPtr->ProcessMouseButton(button, action);
 	});
 
 	glfwSetScrollCallback(this->window, [](GLFWwindow* window, double xoffset, double yoffset)
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->ScrollCallBack(xoffset, yoffset);
+		dataPtr->ProcessScroll(xoffset, yoffset);
 	});
 	
 	glfwMakeContextCurrent(window);
@@ -67,30 +69,12 @@ Application::Application()
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glFrontFace(GL_CW);
+	glFrontFace(GL_CCW);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
 
-void Application::KeyCallback(int key, int action)
-{
-	this->ProcessKeyEvent(key, action, this->deltaTime);
-}
-
-void Application::OnCursorPosEvent(double xpos, double ypos)
-{
-	this->ProcessMouseInput(xpos, ypos);
-}
-
-void Application::mouse_button_callback(int button, int action) 
-{
-	this->ProcessMouseButton(button, action);
-}
-
-void Application::ScrollCallBack(double xoffset, double yoffset) 
-{
-	this->ProcessScroll(xoffset, yoffset);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void Application::Run() 

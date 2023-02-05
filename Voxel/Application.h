@@ -7,10 +7,7 @@ class Application
 {
 public:
 	Application();
-	void KeyCallback(int key, int action);
-	void OnCursorPosEvent(double xpos, double ypos);
-	void mouse_button_callback(int button, int action);
-	void ScrollCallBack(double xoffset, double yoffset);
+
 	void Run();
 
 	virtual void Init() = 0;
@@ -21,8 +18,8 @@ public:
 	virtual void ProcessScroll(double xoffset, double yoffset) = 0;
 	virtual void ProcessKeyEvent(int key, int action, double deltaTime) = 0;
 
+	double deltaTime = 0.0f;
 protected:
 	GLFWwindow* window;
 	int SCR_WIDTH = 3840, SCR_HEIGHT = 2160;
-	double deltaTime = 0.0f;
 };

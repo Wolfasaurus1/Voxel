@@ -1,21 +1,26 @@
 #pragma once
-#include <unordered_map>
-#include <glm/gtc/quaternion.hpp>
-#include "World.h"
 
+#include <GLFW/glfw3.h>
+#include <glm/gtc/quaternion.hpp>
+
+#include <unordered_map>
+
+#include "Chunk.h"
 
 class Player
 {
 public:
 	Player() {
-		position = glm::vec3(20.0f, 40.0f, 20.0f);
+		position = glm::vec3(10.0f, 50.0f, 10.0f);
+		velocity = glm::vec3(0.0, 0.0, 0.0);
+		acceleration = glm::vec3(0.0, -80.0, 0.0);
 		orientation = glm::quat(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
 	void Update(float dt)
 	{
 		glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
-		float speed = 200.0f;
+		float speed = 50.0f;
 
 		if (keysPressed[GLFW_KEY_W])
 			position += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
@@ -26,21 +31,10 @@ public:
 		if (keysPressed[GLFW_KEY_D])
 			position -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * dt * speed;
 
-
 		if (keysPressed[GLFW_KEY_SPACE])
 			position.y += dt * speed;
 		if (keysPressed[GLFW_KEY_LEFT_SHIFT])
 			position.y -= dt * speed;
-	}
-
-	void MoveForward(double dt)
-	{
-
-	}
-
-	void Move(glm::vec3 dir, float dt)
-	{
-		this->position += dir;
 	}
 
 	// key presses result in changes in position! 
@@ -84,7 +78,8 @@ public:
 		return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -position);
 	}
 
-	glm::vec3 position;
+	glm::vec3 position, velocity, acceleration;
+	glm::quat orientation;
 private:
 	std::unordered_map<int, bool> keysPressed;
 
@@ -92,5 +87,4 @@ private:
 	float lastX = 3840.0f / 2.0f;
 	float lastY = 2160.0f / 2.0f;
 
-	glm::quat orientation;
 };
