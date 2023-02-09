@@ -74,11 +74,11 @@ public:
 
 	void Draw(int x, int y, int z, Shader& shader)
 	{
-		//shader.use();
+		shader.use();
 		glBindVertexArray(VAO);
 
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-		shader.setMat4("model", model);
+		//glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+		//shader.setMat4("model", model);
 
 		glDrawElements(GL_TRIANGLES, numTriangles, GL_UNSIGNED_INT, 0);
 	}

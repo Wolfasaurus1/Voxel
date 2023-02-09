@@ -1,37 +1,54 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 #include <glad/gl.h>
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
-#include <PerlinNoise.hpp>
+
+#include "Renderer.h"
+
+
+using namespace std;
+using namespace glm;
+
+
+class Chunk;
+void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<GLuint>& indices);
+
 
 enum BlockType
 {
-	EMPTY,
+	AIR,
 	DIRT,
 	GRASS,
 	WATER
 };
 
 
+enum ChunkState
+{
+	EMPTY, 
+	GENERATED,
+	MESHED
+};
+
+
+
 class Chunk
 {
 public:
-	Chunk(int x, int y, int z, const siv::PerlinNoise& perlin)
+	Chunk(int x, int y, int z)
 	{
-		for (int i = 0; i < 16; i++){
-			for (int k = 0; k < 16; k++) {
-				int height = (int)(perlin.octave2D_01(((x + i) * 0.008), ((z + k) * 0.008), 4) * 50);
-				for (int j = 0; j < 16; j++) {
-					if (abs(height - y - j) < 1)
-						blocks[i][j][k] = GRASS;
-					else
-						blocks[i][j][k] = EMPTY;
-				}
-			}
-		}
+		globalPosition = vec3(x, y, z);
+		
+		for (int i = 0; i < 16; i++)
+			for (int j = 0; j < 16; j++)
+				for (int k = 0; k < 16; k++)
+					blocks[i][j][k] = AIR;
+
+		state = EMPTY;
 	}
 
 	BlockType GetBlock(int x, int y, int z)
@@ -44,14 +61,45 @@ public:
 		blocks[x][y][z] = blockType;
 	}
 
+	Mesh* GetMesh()
+	{
+		return this->mesh;
+	}
+
+	void UpdateMesh()
+	{
+		vector<GLfloat> vertices;
+		vector<GLuint> indices;
+		// typically the minimum sizes needed with current terrain generation
+		vertices.reserve(10000); 
+		indices.reserve(1000); 
+
+		MeshChunk(this, globalPosition, vertices, indices);
+
+		//std::cout << vertices.size() << " " << indices.size() << std::endl;
+
+		if (mesh)
+			mesh->Update(vertices, indices);
+		else
+			mesh = new Mesh(vertices, indices);
+	}
+
+	// should probably make a separate ChunkRenderer class
+	// replace this soon
+	void Render(Shader &shader)
+	{
+		mesh->Draw(0, 0, 0, shader);
+	}
+
+	ChunkState state;
+	vec3 globalPosition;
 private:
-	BlockType blocks[16][16][16]; 
+	Mesh* mesh;
+	std::array<std::array<std::array<BlockType, 16>, 16>, 16> blocks;
+
+	int smallestVertexSize = 100000000000;
+	int smallestIndexSize = 1000000000;
 };
-
-
-
-using namespace std;
-using namespace glm;
 
 
 
@@ -63,7 +111,7 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 	int u, v, w;
 	int n;
 
-	BlockType* mask = new BlockType[16 * 16];
+	BlockType* mask = new BlockType[CHLOD * CHLOD];
 	BlockType current, facing;
 	int s;
 
@@ -91,11 +139,11 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 				for (x[w] = 0; x[w] < CHLOD; x[w]++) 
 				{
 					s = x[w] + x[v] * CHLOD;      //Slice Index
-					mask[s] = EMPTY;              //Set to Air
+					mask[s] = AIR;              //Set to Air
 
 					current = c->GetBlock(x[0], x[1], x[2]);
 
-					if (current == EMPTY) continue;
+					if (current == AIR) continue;
 
 					//Basically, we are facing out of the chunk, so we do take over the surface.
 					if (x[u] + q[u] < 0 || x[u] + q[u] >= CHLOD) {
@@ -107,7 +155,7 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 					// is it facing anything? 
 					facing = c->GetBlock(x[0] + q[0], x[1] + q[1], x[2] + q[2]);
 
-					if (facing == EMPTY) {
+					if (facing == AIR) {
 						mask[s] = current;
 					}
 
@@ -125,7 +173,7 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 					s = x[w] + x[v] * CHLOD;    //Current Slice Index
 					current = mask[s];        //Current Block Type
 
-					if (current == EMPTY)  //We don't mesh air
+					if (current == AIR)  //We don't mesh air
 						continue;
 
 					while (mask[s + width] == current && x[w] + width < CHLOD)
@@ -146,7 +194,7 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 					//Zero the Mask
 					for (int l = x[v]; l < x[v] + height; l++)   
 						for (int k = x[w]; k < x[w] + width; k++)
-							mask[k + l * CHLOD] = EMPTY;
+							mask[k + l * CHLOD] = AIR;
 
 					int du[3] = { 0 }; du[v] = height;
 					int dv[3] = { 0 }; dv[w] = width;

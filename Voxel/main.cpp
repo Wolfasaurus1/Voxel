@@ -6,6 +6,3 @@ int main() {
 	game.Init();
 	game.Run();
 }
-
-
-

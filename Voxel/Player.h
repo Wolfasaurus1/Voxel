@@ -11,7 +11,7 @@ class Player
 {
 public:
 	Player() {
-		position = glm::vec3(10.0f, 50.0f, 10.0f);
+		position = glm::vec3(0.0f, 0.0f, 0.0f);
 		velocity = glm::vec3(0.0, 0.0, 0.0);
 		acceleration = glm::vec3(0.0, -80.0, 0.0);
 		orientation = glm::quat(0.0f, 0.0f, 1.0f, 0.0f);
@@ -19,17 +19,17 @@ public:
 
 	void Update(float dt)
 	{
-		glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
-		float speed = 50.0f;
+		glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
+		float speed = 200.0f;
 
 		if (keysPressed[GLFW_KEY_W])
-			position += glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
+			position += glm::normalize(cameraDirection * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
 		if (keysPressed[GLFW_KEY_S])
-			position -= glm::normalize(front * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
+			position -= glm::normalize(cameraDirection * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
 		if (keysPressed[GLFW_KEY_A])
-			position += glm::normalize(glm::vec3(front.z, 0, -front.x)) * dt * speed;
+			position += glm::normalize(glm::vec3(cameraDirection.z, 0, -cameraDirection.x)) * dt * speed;
 		if (keysPressed[GLFW_KEY_D])
-			position -= glm::normalize(glm::vec3(front.z, 0, -front.x)) * dt * speed;
+			position -= glm::normalize(glm::vec3(cameraDirection.z, 0, -cameraDirection.x)) * dt * speed;
 
 		if (keysPressed[GLFW_KEY_SPACE])
 			position.y += dt * speed;
