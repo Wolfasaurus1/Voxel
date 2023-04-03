@@ -63,7 +63,7 @@ Application::Application()
 
 	//int width, height;
 	//glfwGetFramebufferSize(window, &width, &height);
-	//glViewport(0, 0, width, height);
+	//glViewport(0, 0, width / 2, height);
 
 	glEnable(GL_DEPTH_TEST);
 

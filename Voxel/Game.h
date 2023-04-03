@@ -20,13 +20,13 @@ public:
 	{		
 		// set matrices
 		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)3840.0f / (float)2160.0f, 0.1f, 2000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)3840.0f / (float)2160.0f, 0.1f, 1000.0f);
 
 		// prepare line shader
-		lineShader = new Shader("line.vs", "line.fs");
-		lineShader->use();
-		lineShader->setMat4("projection", projection);
-		lineShader->setMat4("view", view);
+		//lineShader = new Shader("line.vs", "line.fs");
+		//lineShader->use();
+		//lineShader->setMat4("projection", projection);
+		//lineShader->setMat4("view", view);
 
 		// prepare chunk shader
 		shader = new Shader("vertex.vs", "fragment.fs");
@@ -37,7 +37,7 @@ public:
 		// other relavant game objects
 		player = new Player;
 		line = new Line;
-		chunkManager = new ChunkManager;
+		world = new World;
 	}
 
 	/*
@@ -113,18 +113,23 @@ public:
 		}
 	}
 
-
-
 	void Update(float dt) 
 	{		
 		player->Update(dt);
 
 		// generate world
-		chunkManager->GenerateChunksAroundPosition(player->position);
+		world->GenerateChunksAroundPosition(player->position);
 
-		//mesh world
-		chunkManager->MeshChunksAroundPosition(player->position);
+		// mesh world
+		world->MeshChunksAroundPosition(player->position);
 	}
+
+	// I need to decouple rendering from all the game logic
+	// this way I can change one without changing the other
+	// I'll possibly want to change my rendering methods later to be more efficient
+
+	// I'll also probably want a physics engine
+	// 
 
 	void Render() 
 	{
@@ -132,11 +137,10 @@ public:
 
 		// render world
 		shader->use();
-		shader->setMat4("view", player->GetViewMatrix());
 		shader->setVec3("lightPos", player->position);
 
-		chunkManager->RenderChunks(player->position, *shader);
-		
+		shader->setMat4("view", player->GetRightViewMatrix());
+		world->RenderChunks(player->position, *shader);
 
 		//// render ray tracing
 		//lineShader->use();
@@ -156,7 +160,8 @@ public:
 		player->ProcessMouseMovement(xposIn, yposIn);
 	}
 
-	void ProcessMouseButton(int button, int action) {
+	void ProcessMouseButton(int button, int action) 
+	{
 		if (action == GLFW_PRESS)
 			mouseButtonPressed[button] = true;
 		if (action == GLFW_RELEASE)
@@ -190,5 +195,13 @@ private:
 
 	Line* line;
 
-	ChunkManager* chunkManager;
+	World* world;
 };
+
+
+// chunk updates. what happens? 
+
+// we have the world class
+// inside this class
+// game placeblock
+// we notify the render engine

@@ -94,3 +94,29 @@ private:
 	unsigned int VAO, VBO, EBO;
 	int numTriangles;
 };
+
+
+class ChunkRenderer
+{
+public:
+
+	// allows us to keep track of when a chunk changes
+	void OnChunkChanged()
+	{
+
+	}
+
+	// remesh any chunks that have changed and update the VBO
+	void Update()
+	{
+
+	}
+
+	void Render()
+	{
+		// loop through and render all the chunk meshes
+	}
+
+private:
+	std::vector<int> chunksChanged; // maybe make this a queue so that we update them in the order that they were changed
+};

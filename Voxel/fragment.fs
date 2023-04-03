@@ -16,7 +16,7 @@ void main()
     float ambientStrength = 0.4;
     vec3 ambient = ambientStrength * lightColor;
   	
-    vec3 realLightPos = vec3(lightPos.x, lightPos.y + 40, lightPos.z);
+    vec3 realLightPos = vec3(lightPos.x, lightPos.y + 10, lightPos.z);
 
     // diffuse 
     vec3 norm = normalize(normal);

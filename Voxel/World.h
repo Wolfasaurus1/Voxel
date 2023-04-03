@@ -7,10 +7,10 @@
 #include "Chunk.h"
 
 
-class ChunkManager
+class World
 {
 public:
-	ChunkManager() 
+	World() 
 	{
 		fnPerlin = FastNoise::New<FastNoise::Perlin>();
 	}

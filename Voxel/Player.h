@@ -20,7 +20,7 @@ public:
 	void Update(float dt)
 	{
 		glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
-		float speed = 200.0f;
+		float speed = 30.0f;
 
 		if (keysPressed[GLFW_KEY_W])
 			position += glm::normalize(cameraDirection * glm::vec3(1.0f, 0.0f, 1.0f)) * dt * speed;
@@ -35,6 +35,11 @@ public:
 			position.y += dt * speed;
 		if (keysPressed[GLFW_KEY_LEFT_SHIFT])
 			position.y -= dt * speed;
+
+		if (keysPressed[GLFW_KEY_UP])
+			separation += 0.025f;
+		if (keysPressed[GLFW_KEY_DOWN])
+			separation -= 0.025f;
 	}
 
 	// key presses result in changes in position! 
@@ -78,6 +83,18 @@ public:
 		return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -position);
 	}
 
+	glm::mat4 GetLeftViewMatrix()
+	{
+		glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
+		return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -glm::vec3(position.x, position.y, position.z) - glm::normalize(glm::vec3(cameraDirection.z, 0, -cameraDirection.x)) * separation);
+	}
+
+	glm::mat4 GetRightViewMatrix()
+	{
+		glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f) * orientation;
+		return glm::mat4_cast(orientation) * glm::translate(glm::mat4(1.0f), -glm::vec3(position.x, position.y, position.z) + glm::normalize(glm::vec3(cameraDirection.z, 0, -cameraDirection.x)) * separation);
+	}
+
 	glm::vec3 position, velocity, acceleration;
 	glm::quat orientation;
 private:
@@ -87,4 +104,5 @@ private:
 	float lastX = 3840.0f / 2.0f;
 	float lastY = 2160.0f / 2.0f;
 
+	float separation = 0.0f;
 };
