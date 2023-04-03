@@ -197,11 +197,3 @@ private:
 
 	World* world;
 };
-
-
-// chunk updates. what happens? 
-
-// we have the world class
-// inside this class
-// game placeblock
-// we notify the render engine

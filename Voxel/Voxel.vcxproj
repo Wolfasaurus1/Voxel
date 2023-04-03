@@ -175,8 +175,9 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="WorldRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

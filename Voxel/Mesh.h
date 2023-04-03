@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 //GL
 #include <glad/gl.h>
 #include <glm/glm.hpp>
@@ -9,7 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 //STL
+#include <iostream>
 #include <vector>
+#include <queue>
 
 //other headers
 #include "shader.h"
@@ -93,30 +93,4 @@ public:
 private:
 	unsigned int VAO, VBO, EBO;
 	int numTriangles;
-};
-
-
-class ChunkRenderer
-{
-public:
-
-	// allows us to keep track of when a chunk changes
-	void OnChunkChanged()
-	{
-
-	}
-
-	// remesh any chunks that have changed and update the VBO
-	void Update()
-	{
-
-	}
-
-	void Render()
-	{
-		// loop through and render all the chunk meshes
-	}
-
-private:
-	std::vector<int> chunksChanged; // maybe make this a queue so that we update them in the order that they were changed
 };
