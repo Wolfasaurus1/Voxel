@@ -35,10 +35,6 @@ public:
 					if (!chunks[ivec3(x, y, z)])  // has the chunk object been created?
 					{
 						chunks[ivec3(x, y, z)] = new Chunk(16 * x, 16 * y, 16 * z); // if not let's create it 
-					}
-					
-					if (chunks[ivec3(x, y, z)]->state == EMPTY)
-					{
 						GenerateChunk(chunks[ivec3(x, y, z)]); // now generate the block data in the chunk
 						chunks[ivec3(x, y, z)]->state = GENERATED;
 					}
@@ -65,11 +61,6 @@ public:
 				chunk->SetBlock(x, y, z, GRASS);
 			}
 		}
-
-		// notify the renderer that a chunk was changed so it can be remeshed
-		// notice, we don't actually need to know anything about the renderer here
-		// except that it wants to be notified when the chunk changes
-
 	}
 
 	void MeshChunksAroundPosition(glm::vec3 playerPosition)
@@ -113,16 +104,19 @@ public:
 		return chunks[coords];
 	}
 
-	void addChunkObserver(ChunkObserver* observer) {
+	void addChunkObserver(ChunkObserver* observer) 
+	{
 		observers.push_back(observer);
 	}
 
-	void removeChunkObserver(ChunkObserver* observer) {
+	void removeChunkObserver(ChunkObserver* observer) 
+	{
 		observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
 	}
 	
 private:
-	void notifyObservers(ivec3& coords) {
+	void notifyObservers(ivec3& coords) 
+	{
 		for (ChunkObserver* observer : observers) {
 			observer->OnChunkChanged(coords);
 		}
@@ -134,8 +128,8 @@ private:
 
 	std::unordered_map<ivec3, Chunk*> chunks;
 
+	// terrain generation should probably be handled in a whole separate class
 	FastNoise::SmartNode<FastNoise::Perlin> fnPerlin;
 
 	std::vector<ChunkObserver*> observers;
-
 };
