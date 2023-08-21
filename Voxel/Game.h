@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "shader.h"
 #include "World.h"
+#include "GUI.h"
 
 
 class Game : public Application
@@ -30,6 +31,7 @@ public:
 		// other relavant game objects
 		player = new Player;
 		world = new ChunkManager;
+		gui = new GUI;
 	}
 
 	void Update(float dt) 
@@ -53,6 +55,8 @@ public:
 
 		shader->setMat4("view", player->GetRightViewMatrix());
 		world->RenderChunks(player->position, *shader);
+
+		gui->Render();
 	}
 
 
@@ -64,6 +68,10 @@ public:
 
 	void ProcessMouseButton(int button, int action) 
 	{
+		if (action == GLFW_PRESS)
+			world->PlaceBlock(WATER, player->position);
+
+
 		if (action == GLFW_PRESS)
 			mouseButtonPressed[button] = true;
 		if (action == GLFW_RELEASE)
@@ -80,7 +88,8 @@ public:
 
 	void ProcessScroll(double xoffset, double yoffset)
 	{
-		
+		// 
+		gui->HandleMouseScroll(-yoffset);
 	}
 
 	~Game()
@@ -96,6 +105,8 @@ private:
 	std::unordered_map<int, bool> mouseButtonPressed;
 
 	ChunkManager* world;
+
+	GUI* gui;
 };
 
 

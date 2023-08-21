@@ -6,6 +6,7 @@
 
 #include "Chunk.h"
 
+#include <glm/gtc/integer.hpp>
 
 class ChunkManager
 {
@@ -91,6 +92,30 @@ public:
 			}
 		}
 	}
+
+	int modPositive(int a, int b) {
+		int result = a % b;
+		return result >= 0 ? result : result + b;
+	}
+
+
+	void PlaceBlock(BlockType blockType, ivec3 position)
+	{
+		// First, get which chunk it is in
+		ivec3 chunkKey;
+		chunkKey.x = position.x / 16;
+		chunkKey.y = position.y / 16;
+		chunkKey.z = position.z / 16;
+
+		ivec3 relativePosition;
+		relativePosition.x = modPositive(position.x, 16);
+		relativePosition.y = modPositive(position.y, 16);
+		relativePosition.z = modPositive(position.z, 16);
+
+		chunks[chunkKey]->SetBlock(relativePosition.x, relativePosition.y, relativePosition.z, blockType);
+		chunks[chunkKey]->UpdateMesh();
+	}
+
 
 	Chunk* GetChunk(ivec3& coords)
 	{

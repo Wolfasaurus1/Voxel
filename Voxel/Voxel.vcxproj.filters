@@ -47,12 +47,6 @@
     <None Include="gui.fs">
       <Filter>shaders</Filter>
     </None>
-    <None Include="line.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="line.fs">
-      <Filter>shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -70,13 +64,10 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldRenderer.h">
+    <ClInclude Include="GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
