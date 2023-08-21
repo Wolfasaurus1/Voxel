@@ -7,17 +7,10 @@
 #include "Chunk.h"
 
 
-class ChunkObserver
+class ChunkManager
 {
 public:
-	virtual void OnChunkChanged(glm::ivec3& dirtyChunkCoords) = 0;
-};
-
-
-class World
-{
-public:
-	World() 
+	ChunkManager() 
 	{
 		fnPerlin = FastNoise::New<FastNoise::Perlin>();
 	}
@@ -103,24 +96,8 @@ public:
 	{
 		return chunks[coords];
 	}
-
-	void addChunkObserver(ChunkObserver* observer) 
-	{
-		observers.push_back(observer);
-	}
-
-	void removeChunkObserver(ChunkObserver* observer) 
-	{
-		observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
-	}
 	
 private:
-	void notifyObservers(ivec3& coords) 
-	{
-		for (ChunkObserver* observer : observers) {
-			observer->OnChunkChanged(coords);
-		}
-	}
 
 	// meshing will need to be less, need to know info from surrounding chunks during meshing
 	int generationDistance = 16;
@@ -130,6 +107,4 @@ private:
 
 	// terrain generation should probably be handled in a whole separate class
 	FastNoise::SmartNode<FastNoise::Perlin> fnPerlin;
-
-	std::vector<ChunkObserver*> observers;
 };

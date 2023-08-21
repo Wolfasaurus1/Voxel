@@ -203,11 +203,11 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 					// this should be somewhere else. come back and refactor this
 					BlockType type = c->GetBlock(x[0], x[1], x[2]);
 					if (type == GRASS)
-						color = vec3(0.251, 0.475, 0.549);
+						color = vec3(86, 125, 70) / 255.f;
 					else if (type == DIRT)
 						color = vec3(0.122, 0.212, 0.239);
 					else if (type == WATER)
-						color = vec3(0.439, 0.663, 0.631);
+						color = vec3(66, 135, 245) / 255.f;
 
 
 

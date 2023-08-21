@@ -165,19 +165,15 @@
     <None Include="fragment.fs" />
     <None Include="gui.fs" />
     <None Include="gui.vs" />
-    <None Include="line.fs" />
-    <None Include="line.vs" />
     <None Include="vertex.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Line.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="WorldRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,7 +16,7 @@ void main()
     float ambientStrength = 0.4;
     vec3 ambient = ambientStrength * lightColor;
   	
-    vec3 realLightPos = vec3(lightPos.x, lightPos.y + 10, lightPos.z);
+    vec3 realLightPos = vec3(20, 30, 20);
 
     // diffuse 
     vec3 norm = normalize(normal);
@@ -24,6 +24,6 @@ void main()
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    vec3 result = (ambient + diffuse) * objectColor;// / (distance(realLightPos, FragPos) * 0.05);
+    vec3 result = (ambient + diffuse) * objectColor / (distance(realLightPos, FragPos) * 0.05);
     FragColor = vec4(result, 1.0);
 }
