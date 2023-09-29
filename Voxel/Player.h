@@ -52,10 +52,10 @@ public:
 	}
 
 	// mouse movement changes the orientation of the player
-	void ProcessMouseMovement(double xposIn, double yposIn)
+	void ProcessMouseMovement(double xposIn, double yposIn, float dt)
 	{
-		float xpos = static_cast<float>(xposIn);
-		float ypos = static_cast<float>(yposIn);
+		double xpos = static_cast<double>(xposIn);
+		double ypos = static_cast<double>(yposIn);
 		if (firstMouse)
 		{
 			lastX = xpos;
@@ -63,8 +63,8 @@ public:
 			firstMouse = false;
 		}
 
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+		double xoffset = xpos - lastX;
+		double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
 		lastX = xpos;
 		lastY = ypos;
@@ -75,7 +75,7 @@ public:
 		glm::quat pitchQuat = glm::angleAxis(glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::quat yawQuat = glm::angleAxis(glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		orientation = glm::normalize(pitchQuat) * orientation * glm::normalize(yawQuat);
+		orientation = glm::normalize(pitchQuat * dt) * orientation * glm::normalize(yawQuat * dt);
 	}
 
 	glm::mat4 GetViewMatrix()

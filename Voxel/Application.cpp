@@ -9,8 +9,8 @@ Application::Application()
 {
 	// glfw: initialize and configure
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWmonitor* primary = glfwGetPrimaryMonitor();
@@ -22,7 +22,7 @@ Application::Application()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 1);
 
 	window = glfwCreateWindow(3840, 2160, "Voxel Engine", primary, NULL);
 
@@ -37,7 +37,7 @@ Application::Application()
 	glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos)
 	{
 		Application* dataPtr = static_cast <Application*> (glfwGetWindowUserPointer(window));
-		dataPtr->ProcessMouseInput(xpos, ypos);
+		dataPtr->ProcessMouseInput(xpos, ypos, dataPtr->deltaTime);
 	});
 
 	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) 
@@ -92,12 +92,9 @@ void Application::Run()
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
-		//std::cout << 1.0f / deltaTime << std::endl;
-
 		glfwPollEvents();
 		Update(deltaTime);
 		Render();
 		glfwSwapBuffers(window);
-		glFinish();
 	}
 }

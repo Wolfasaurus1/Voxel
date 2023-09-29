@@ -61,9 +61,9 @@ public:
 
 
 
-	void ProcessMouseInput(double xposIn, double yposIn) 
+	void ProcessMouseInput(double xposIn, double yposIn, double dt) 
 	{
-		player->ProcessMouseMovement(xposIn, yposIn);
+		player->ProcessMouseMovement(xposIn, yposIn, dt);
 	}
 
 	void ProcessMouseButton(int button, int action) 

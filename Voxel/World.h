@@ -125,8 +125,8 @@ public:
 private:
 
 	// meshing will need to be less, need to know info from surrounding chunks during meshing
-	int generationDistance = 16;
-	int meshingDistance = 16;
+	int generationDistance = 4;
+	int meshingDistance = 4;
 
 	std::unordered_map<ivec3, Chunk*> chunks;
 
