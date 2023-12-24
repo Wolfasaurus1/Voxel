@@ -22,7 +22,7 @@ Application::Application()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	glfwWindowHint(GLFW_SAMPLES, 1);
+	glfwWindowHint(GLFW_SAMPLES, 0);
 
 	window = glfwCreateWindow(3840, 2160, "Voxel Engine", primary, NULL);
 
@@ -96,5 +96,6 @@ void Application::Run()
 		Update(deltaTime);
 		Render();
 		glfwSwapBuffers(window);
+		//glFinish();
 	}
 }

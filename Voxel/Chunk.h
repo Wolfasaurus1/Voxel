@@ -27,15 +27,6 @@ enum BlockType
 };
 
 
-enum ChunkState
-{
-	EMPTY, 
-	GENERATED,
-	MESHED
-};
-
-
-
 class Chunk
 {
 public:
@@ -48,7 +39,8 @@ public:
 				for (int k = 0; k < 16; k++)
 					blocks[i][j][k] = AIR;
 
-		state = EMPTY;
+		UpdateMesh();
+		dirty = false;
 	}
 
 	BlockType GetBlock(int x, int y, int z)
@@ -59,6 +51,7 @@ public:
 	void SetBlock(int x, int y, int z, BlockType blockType)
 	{
 		blocks[x][y][z] = blockType;
+		dirty = true;
 	}
 
 	Mesh* GetMesh()
@@ -82,6 +75,8 @@ public:
 			mesh->Update(vertices, indices);
 		else
 			mesh = new Mesh(vertices, indices);
+
+		dirty = false;
 	}
 
 	// should probably make a separate ChunkRenderer class
@@ -91,14 +86,16 @@ public:
 		mesh->Draw(0, 0, 0, shader);
 	}
 
-	ChunkState state;
+	bool meshIsOutdated()
+	{
+		return this->dirty;
+	}
+
 	vec3 globalPosition;
 private:
 	Mesh* mesh;
 	std::array<std::array<std::array<BlockType, 16>, 16>, 16> blocks;
-
-	int smallestVertexSize = 100000000000;
-	int smallestIndexSize = 1000000000;
+	bool dirty = false;
 };
 
 
@@ -158,7 +155,6 @@ void MeshChunk(Chunk* c, vec3 p, std::vector<GLfloat>& vertexData, std::vector<G
 					if (facing == AIR) {
 						mask[s] = current;
 					}
-
 				}
 			}
 

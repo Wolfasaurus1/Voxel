@@ -20,7 +20,7 @@ public:
 	{		
 		// set matrices
 		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)3840.0f / (float)2160.0f, 0.1f, 1000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians<float>(70.0f), (float)3840.0f / (float)2160.0f, 0.1f, 250.0f);
 
 		// prepare chunk shader
 		shader = new Shader("vertex.vs", "fragment.fs");
@@ -58,8 +58,6 @@ public:
 
 		gui->Render();
 	}
-
-
 
 	void ProcessMouseInput(double xposIn, double yposIn, double dt) 
 	{

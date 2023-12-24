@@ -72,10 +72,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\..\Downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoise.dll">
+    <CopyFileToFolders Include="..\..\..\..\Downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoiseD.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\..\Downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoiseD.dll">
+    <CopyFileToFolders Include="D:\downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoise.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
   </ItemGroup>

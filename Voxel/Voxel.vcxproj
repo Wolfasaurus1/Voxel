@@ -154,12 +154,12 @@
     <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\..\Downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoise.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="..\..\..\..\Downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoiseD.dll">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="D:\downloads\FastNoise2-v0.9.7-alpha-Win32-MSVC\FastNoise2\bin\FastNoise.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </CopyFileToFolders>
     <None Include="fragment.fs" />
